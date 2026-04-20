@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Anant Upadhyay | AI-Powered Digital Architect</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: '#000000',
+                        accent: { cyan: '#22d3ee', blue: '#3b82f6', purple: '#a855f7' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons (CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom CSS (Framer Motion Replacements & Effects) -->
+    <style>
+        body {
+            background-color: #000000;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000000; }
+        ::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #333333; }
+
+        /* Glassmorphism 2.0 */
+        .glass-card {
+            background: rgba(12, 12, 12, 0.75);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 32px rgba(255, 255, 255, 0.01);
+        }
+
+        /* Neon Glows */
+        .neon-text-glow { text-shadow: 0 0 20px rgba(34, 211, 238, 0.4), 0 0 40px rgba(168, 85, 247, 0.2); }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .cursor-blink { animation: blink 1s step-end infinite; }
+
+        /* Scroll Reveals (Vanilla JS replacement for Framer Motion) */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Shimmer Effect */
+        .shimmer-sweep { position: relative; overflow: hidden; }
+        .shimmer-sweep::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(-20deg); animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer { 100% { left: 200%; } }
+
+        /* Floating Inputs */
+        .input-wrapper { position: relative; }
+        .input-field {
+            width: 100%; padding: 1rem 1.25rem; background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem;
+            color: white; outline: none; transition: all 0.3s ease;
+        }
+        .input-field:focus { border-color: #22d3ee; box-shadow: 0 0 15px rgba(34, 211, 238, 0.2); }
+        .input-label {
+            position: absolute; left: 1.25rem; top: 1rem; color: #94a3b8;
+            pointer-events: none; transition: all 0.3s ease;
+        }
+        .input-field:focus ~ .input-label, .input-field:not(:placeholder-shown) ~ .input-label {
+            top: -0.5rem; left: 1rem; font-size: 0.75rem;
+            background: #000000; padding: 0 0.25rem; color: #22d3ee;
+        }
+
+        /* 3D Tilt Card */
+        .perspective-1000 { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .tilt-card-inner {
+            transition: transform 0.1s ease-out;
+            transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(30px);
+        }
+
+        /* Magnetic Button */
+        .magnetic-btn { transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1); }
+
+        /* CSS Aurora Keyframes */
+        @keyframes drift1 {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(5%, 5%) rotate(120deg) scale(1.1); }
+            66% { transform: translate(-5%, 5%) rotate(240deg) scale(0.9); }
+            100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+        }
+        @keyframes drift2 {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(-5%, -5%) rotate(120deg) scale(1.1); }
+            66% { transform: translate(5%, -5%) rotate(240deg) scale(0.9); }
+            100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+        }
+        @keyframes drift3 {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            33% { transform: translate(5%, -5%) rotate(120deg) scale(1.1); }
+            66% { transform: translate(-5%, 5%) rotate(240deg) scale(0.9); }
+            100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+        }
+
+        /* Loader */
+        #loader { transition: opacity 0.8s ease, visibility 0.8s ease; }
+        .glitch-text { animation: glitch 1s linear infinite; }
+        @keyframes glitch {
+            2%, 64% { transform: translate(2px, 0) skew(0deg); }
+            4%, 60% { transform: translate(-2px, 0) skew(0deg); }
+            62% { transform: translate(0, 0) skew(5deg); }
+        }
+
+        /* Skill bars */
+        .skill-fill { transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1); width: 0%; }
+    </style>
+</head>
+<body class="bg-black text-slate-100 selection:bg-cyan-500/30">
+
+    <!-- INITIAL LOADER -->
+    <div id="loader" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center">
+        <div class="relative flex flex-col items-center">
+            <svg width="100" height="100" viewBox="0 0 100 100" class="mb-8 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]">
+                <path id="loader-path" d="M 20,80 L 50,20 L 80,80 M 35,50 L 65,50" fill="transparent" stroke="url(#gradient)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" style="stroke-dasharray: 250; stroke-dashoffset: 250; transition: stroke-dashoffset 1.5s ease-in-out;" />
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#22d3ee" />
+                        <stop offset="100%" stopColor="#a855f7" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            <p class="text-cyan-400/80 tracking-[0.4em] text-xs font-medium glitch-text mb-4 text-center">INITIALIZING EXPERIENCES</p>
+            <div class="w-48 md:w-64 h-1 bg-white/10 rounded-full overflow-hidden relative">
+                <div id="loader-bar" class="absolute top-0 left-0 h-full bg-gradient-to-r from-cyan-400 to-purple-500 shadow-[0_0_10px_#22d3ee]" style="width: 0%; transition: width 0.1s;"></div>
+            </div>
+            <div id="loader-text" class="mt-2 text-xs text-gray-500 font-mono">0%</div>
+        </div>
+    </div>
+
+    <!-- BACKGROUND ANIMATION LAYER -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-black">
+        <!-- Drifting Aurora Blobs Layer -->
+        <div class="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-[#06b6d4] opacity-[0.08] blur-[120px] animate-[drift1_15s_infinite_linear]"></div>
+        <div class="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#8b5cf6] opacity-[0.10] blur-[120px] animate-[drift2_20s_infinite_linear]"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-[60%] h-[60%] rounded-full bg-[#3b82f6] opacity-[0.08] blur-[120px] animate-[drift3_25s_infinite_linear]"></div>
+        
+        <!-- Responsive Particle Brain Canvas -->
+        <canvas id="bg-canvas" class="absolute inset-0 w-full h-full block"></canvas>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 py-5 md:py-6 bg-transparent">
+        <div class="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center relative">
+            <a href="#" class="text-xl md:text-2xl font-bold tracking-tighter text-white relative z-10">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">A</span>nant.
+            </a>
+            
+            <div class="hidden md:flex space-x-1 relative z-10">
+                <a href="#about" class="nav-link relative px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">About</a>
+                <a href="#projects" class="nav-link relative px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">Projects</a>
+                <a href="#services" class="nav-link relative px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">Services</a>
+                <a href="#certifications" class="nav-link relative px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">Certifications</a>
+                <a href="#contact" class="nav-link relative px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">Contact</a>
+            </div>
+
+            <!-- Mobile Toggle -->
+            <button id="mobile-menu-btn" class="md:hidden text-gray-300 relative z-10 p-2 transform transition-transform" aria-label="Toggle Navigation">
+                <i data-lucide="menu" id="menu-icon"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full glass-card border-b border-white/5 py-4 px-6 flex flex-col space-y-4 shadow-2xl z-40 transform origin-top transition-all duration-300 scale-y-0 opacity-0">
+            <a href="#about" class="text-gray-300 hover:text-cyan-400 font-medium py-2 mobile-link">About</a>
+            <a href="#projects" class="text-gray-300 hover:text-cyan-400 font-medium py-2 mobile-link">Projects</a>
+            <a href="#services" class="text-gray-300 hover:text-cyan-400 font-medium py-2 mobile-link">Services</a>
+            <a href="#certifications" class="text-gray-300 hover:text-cyan-400 font-medium py-2 mobile-link">Certifications</a>
+            <a href="#contact" class="text-gray-300 hover:text-cyan-400 font-medium py-2 mobile-link">Contact</a>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="relative z-10 w-full flex-grow">
+        
+        <!-- HERO SECTION -->
+        <section id="home" class="relative min-h-screen flex items-center justify-center pt-28 md:pt-20 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full pb-16 md:pb-0">
+                <div class="order-2 lg:order-1 flex flex-col items-start space-y-5 md:space-y-6 text-center sm:text-left w-full">
+                    <div class="reveal inline-flex items-center px-4 py-1.5 rounded-full glass-card border border-cyan-500/30 text-cyan-400 text-[10px] sm:text-xs font-semibold tracking-wider uppercase mx-auto sm:mx-0">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 mr-2 animate-pulse shadow-[0_0_8px_#22d3ee]"></span>
+                        Available for Freelance
+                    </div>
+                    
+                    <h1 class="reveal text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-[1.15] tracking-tight w-full" data-delay="100">
+                        Hi, I'm <br/>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 neon-text-glow">Anant Upadhyay</span>
+                    </h1>
+                    
+                    <h2 class="reveal text-sm sm:text-lg md:text-xl text-gray-200 h-10 font-medium w-full" data-delay="200">
+                        <span id="typewriter"></span><span class="cursor-blink text-cyan-400 text-shadow-[0_0_8px_#22d3ee]">|</span>
+                    </h2>
+                    
+                    <p class="reveal text-slate-300 max-w-lg text-sm sm:text-base md:text-lg leading-relaxed font-light mx-auto sm:mx-0" data-delay="300">
+                        I transform complex problems into elegant, AI-driven digital solutions. Expert in bots, growth engineering, and premium web experiences.
+                    </p>
+                    
+                    <div class="reveal flex flex-col sm:flex-row gap-4 pt-4 sm:pt-6 w-full sm:w-auto" data-delay="400">
+                        <a href="https://wa.me/918887092926" target="_blank" class="magnetic-btn w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-full bg-white text-gray-950 font-bold hover:bg-gray-100 transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)] flex items-center justify-center gap-2 group relative overflow-hidden">
+                            <span class="relative z-10 flex items-center">WhatsApp Me <i data-lucide="message-circle" class="w-[18px] h-[18px] ml-1"></i></span>
+                            <div class="absolute inset-0 rounded-full bg-black/10 transform scale-0 group-hover:scale-150 transition-transform duration-500 pointer-events-none"></div>
+                        </a>
+                        <a href="#contact" class="magnetic-btn w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-full glass-card text-white font-semibold hover:border-cyan-500/50 transition-colors flex items-center justify-center">
+                            Contact Me
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="reveal order-1 lg:order-2 flex justify-center lg:justify-end mt-8 lg:mt-0 perspective-1000" data-delay="300">
+                    <div class="relative w-52 h-52 sm:w-60 sm:h-60 lg:w-72 lg:h-72 rounded-full p-1 border border-white/10 group mx-auto perspective-1000">
+                        <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-cyan-500 via-amber-500/20 to-purple-600 blur-[25px] opacity-40 group-hover:opacity-60 transition-opacity duration-700 animate-[spin_15s_linear_infinite]"></div>
+                        
+                        <div class="w-full h-full rounded-full overflow-hidden bg-neutral-900 border-2 border-white/10 relative z-10 preserve-3d shadow-[0_0_20px_rgba(0,0,0,0.5)] transform transition-transform duration-300 hover:rotate-y-[-10deg] hover:rotate-x-[10deg] hover:scale-105">
+                            <img src="Copilot_20260420_202210.png" alt="Anant Upadhyay" class="w-full h-full object-cover object-top transition-all duration-500" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';"/>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-70 pointer-events-none"></div>
+                        </div>
+                        
+                        <div class="absolute -bottom-2 -left-2 sm:bottom-0 sm:-left-6 glass-card px-3 py-2 sm:px-4 sm:py-3 rounded-2xl border border-white/10 flex items-center gap-2 sm:gap-3 shadow-[0_0_20px_rgba(34,211,238,0.2)] z-20 reveal" data-delay="1000">
+                            <div class="p-1.5 sm:p-2 bg-cyan-500/20 rounded-full text-cyan-400"><i data-lucide="bot" class="w-[18px] h-[18px] sm:w-5 sm:h-5"></i></div>
+                            <div>
+                                <p class="text-white font-bold text-xs sm:text-sm">AI Bots</p>
+                                <p class="text-gray-400 text-[10px] sm:text-xs">Expert</p>
+                            </div>
+                        </div>
+                        
+                        <div class="absolute top-6 -right-2 sm:top-10 sm:-right-6 glass-card px-3 py-2 sm:px-4 sm:py-3 rounded-2xl border border-white/10 flex items-center gap-2 sm:gap-3 shadow-[0_0_20px_rgba(168,85,247,0.2)] z-20 reveal" data-delay="1200">
+                            <div class="p-1.5 sm:p-2 bg-purple-500/20 rounded-full text-purple-400"><i data-lucide="trending-up" class="w-[18px] h-[18px] sm:w-5 sm:h-5"></i></div>
+                            <div>
+                                <p class="text-white font-bold text-xs sm:text-sm">Growth</p>
+                                <p class="text-gray-400 text-[10px] sm:text-xs">Strategist</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center text-gray-500 z-10 animate-bounce">
+                <span class="text-[10px] tracking-[0.2em] uppercase mb-1 sm:mb-2 font-medium">Scroll</span>
+                <i data-lucide="chevron-down" class="text-cyan-400 w-[18px] h-[18px] sm:w-5 sm:h-5"></i>
+            </div>
+        </section>
+
+        <!-- ABOUT & SKILLS SECTION -->
+        <section id="about" class="py-16 md:py-24 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+                <div class="reveal mb-12 md:mb-24 flex flex-col items-center text-center">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6">The <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Architecture</span></h2>
+                    <div class="w-20 md:w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full shadow-[0_0_10px_#22d3ee]"></div>
+                </div>
+                
+                <div class="grid lg:grid-cols-2 gap-10 md:gap-16 items-center">
+                    <div class="reveal glass-card p-6 sm:p-8 md:p-12 rounded-[2rem] md:rounded-[2.5rem] border border-white/5 relative overflow-hidden group">
+                        <div class="absolute inset-0 opacity-[0.03] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white via-neutral-900 to-black pointer-events-none"></div>
+                        <h3 class="text-2xl md:text-3xl font-bold text-white mb-4 md:mb-6 relative z-10">Who am I?</h3>
+                        <p class="text-slate-200 leading-relaxed text-sm sm:text-base md:text-lg mb-8 relative z-10 font-light">
+                            I'm a Class 12th Commerce & AI student by day, and an AI-driven entrepreneur by night. I specialize in merging business logic with cutting-edge technology—from building automated Telegram bots to engineering digital growth for local businesses. My vision is to create premium digital experiences that drive real-world value.
+                        </p>
+                        <div class="grid grid-cols-2 gap-4 md:gap-6 pt-6 md:pt-8 border-t border-white/10 relative z-10">
+                            <div class="glass-card p-4 rounded-2xl text-center transition-transform hover:scale-105">
+                                <h4 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-1 tracking-tight">12<span class="text-cyan-400 text-lg sm:text-xl md:text-2xl">th</span></h4>
+                                <p class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider font-semibold">Commerce + AI</p>
+                            </div>
+                            <div class="glass-card p-4 rounded-2xl text-center transition-transform hover:scale-105">
+                                <h4 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-1 tracking-tight">4<span class="text-purple-400 text-lg sm:text-xl md:text-2xl">+</span></h4>
+                                <p class="text-[10px] sm:text-xs text-gray-400 uppercase tracking-wider font-semibold">Active Projects</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-5 md:space-y-6">
+                        <h3 class="reveal text-xl md:text-2xl font-bold text-white mb-6 md:mb-8 text-center lg:text-left">Technical Arsenal</h3>
+                        
+                        <!-- Skills Output -->
+                        <div class="reveal space-y-2" data-delay="100">
+                            <div class="flex justify-between text-xs sm:text-sm font-medium"><span class="text-gray-200">AI Tools (Gemini, GPT)</span><span class="text-cyan-400 font-bold">95%</span></div>
+                            <div class="w-full bg-gray-800/50 rounded-full h-2.5 md:h-3 overflow-hidden p-[1.5px] border border-white/5">
+                                <div class="skill-fill h-full rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 relative overflow-hidden" data-width="95%">
+                                    <div class="absolute inset-0 w-full h-full bg-white/20 animate-[shimmer_2s_infinite] -skew-x-12 transform -translate-x-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="reveal space-y-2" data-delay="200">
+                            <div class="flex justify-between text-xs sm:text-sm font-medium"><span class="text-gray-200">Telegram Bot Dev</span><span class="text-cyan-400 font-bold">90%</span></div>
+                            <div class="w-full bg-gray-800/50 rounded-full h-2.5 md:h-3 overflow-hidden p-[1.5px] border border-white/5">
+                                <div class="skill-fill h-full rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 relative overflow-hidden" data-width="90%">
+                                    <div class="absolute inset-0 w-full h-full bg-white/20 animate-[shimmer_2s_infinite] -skew-x-12 transform -translate-x-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="reveal space-y-2" data-delay="300">
+                            <div class="flex justify-between text-xs sm:text-sm font-medium"><span class="text-gray-200">Digital Marketing</span><span class="text-cyan-400 font-bold">85%</span></div>
+                            <div class="w-full bg-gray-800/50 rounded-full h-2.5 md:h-3 overflow-hidden p-[1.5px] border border-white/5">
+                                <div class="skill-fill h-full rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 relative overflow-hidden" data-width="85%">
+                                    <div class="absolute inset-0 w-full h-full bg-white/20 animate-[shimmer_2s_infinite] -skew-x-12 transform -translate-x-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="reveal space-y-2" data-delay="400">
+                            <div class="flex justify-between text-xs sm:text-sm font-medium"><span class="text-gray-200">Web Development</span><span class="text-cyan-400 font-bold">80%</span></div>
+                            <div class="w-full bg-gray-800/50 rounded-full h-2.5 md:h-3 overflow-hidden p-[1.5px] border border-white/5">
+                                <div class="skill-fill h-full rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 relative overflow-hidden" data-width="80%">
+                                    <div class="absolute inset-0 w-full h-full bg-white/20 animate-[shimmer_2s_infinite] -skew-x-12 transform -translate-x-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS SECTION -->
+        <section id="projects" class="py-16 md:py-24 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+                <div class="reveal flex flex-col md:flex-row justify-between items-center md:items-end mb-12 md:mb-24 text-center md:text-left">
+                    <div>
+                        <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6">Featured <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Work</span></h2>
+                        <div class="w-20 md:w-24 h-1 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full shadow-[0_0_10px_#a855f7] mx-auto md:mx-0"></div>
+                    </div>
+                    <p class="text-gray-400 mt-4 md:mt-0 max-w-sm font-light text-sm sm:text-base">A selection of my recent automated systems, bots, and digital growth projects engineered for scale.</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 perspective-1000">
+                    
+                    <!-- Project 1 -->
+                    <div class="reveal h-full perspective-1000 tilt-card" data-delay="100">
+                        <div class="tilt-card-inner w-full h-full glass-card rounded-3xl border border-white/5 group overflow-hidden shimmer-sweep relative">
+                            <div class="absolute -inset-px rounded-3xl bg-gradient-to-b from-cyan-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                            <div class="p-6 md:p-8 flex flex-col h-full relative z-10">
+                                <div class="flex justify-between items-start mb-4 md:mb-6">
+                                    <div class="p-2 md:p-3 bg-gray-800/80 rounded-2xl border border-white/5 text-purple-400 shadow-inner group-hover:bg-purple-500/20 group-hover:text-purple-300 transition-colors">
+                                        <i data-lucide="code" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                    </div>
+                                    <a href="https://wa.me/918887092926" target="_blank" class="p-2 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors cursor-pointer z-20">
+                                        <i data-lucide="arrow-right" class="-rotate-45 w-[18px] h-[18px] md:w-5 md:h-5"></i>
+                                    </a>
+                                </div>
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 group-hover:text-cyan-400 transition-colors leading-tight">AI Content Generation</h3>
+                                <p class="text-slate-300 text-xs sm:text-sm mb-6 md:mb-8 flex-grow font-light leading-relaxed">A fully automated pipeline leveraging AI to generate, format, and schedule high-quality content across multiple platforms.</p>
+                                <div class="flex flex-wrap gap-2 mt-auto pt-4 md:pt-6 border-t border-white/5">
+                                    <span class="text-[9px] md:text-[10px] font-semibold tracking-wider uppercase px-2 py-1 md:px-3 md:py-1.5 bg-gray-900/50 text-gray-300 rounded-lg border border-gray-700/50">Python</span>
+                                    <span class="text-[9px] md:text-[10px] font-semibold tracking-wider uppercase px-2 py-1 md:px-3 md:py-1.5 bg-gray-900/50 text-gray-300 rounded-lg border border-gray-700/50">OpenAI</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="reveal h-full perspective-1000 tilt-card" data-delay="200">
+                        <div class="tilt-card-inner w-full h-full glass-card rounded-3xl border border-white/5 group overflow-hidden shimmer-sweep relative">
+                            <div class="absolute -inset-px rounded-3xl bg-gradient-to-b from-cyan-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                            <div class="p-6 md:p-8 flex flex-col h-full relative z-10">
+                                <div class="flex justify-between items-start mb-4 md:mb-6">
+                                    <div class="p-2 md:p-3 bg-gray-800/80 rounded-2xl border border-white/5 text-purple-400 shadow-inner group-hover:bg-purple-500/20 group-hover:text-purple-300 transition-colors">
+                                        <i data-lucide="code" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                    </div>
+                                    <a href="https://wa.me/918887092926" target="_blank" class="p-2 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors cursor-pointer z-20">
+                                        <i data-lucide="arrow-right" class="-rotate-45 w-[18px] h-[18px] md:w-5 md:h-5"></i>
+                                    </a>
+                                </div>
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 group-hover:text-cyan-400 transition-colors leading-tight">Student AI Agent</h3>
+                                <p class="text-slate-300 text-xs sm:text-sm mb-6 md:mb-8 flex-grow font-light leading-relaxed">A comprehensive AI-powered dashboard acting as a personal academic agent, tracking schedules and summarizing notes.</p>
+                                <div class="flex flex-wrap gap-2 mt-auto pt-4 md:pt-6 border-t border-white/5">
+                                    <span class="text-[9px] md:text-[10px] font-semibold tracking-wider uppercase px-2 py-1 md:px-3 md:py-1.5 bg-gray-900/50 text-gray-300 rounded-lg border border-gray-700/50">React</span>
+                                    <span class="text-[9px] md:text-[10px] font-semibold tracking-wider uppercase px-2 py-1 md:px-3 md:py-1.5 bg-gray-900/50 text-gray-300 rounded-lg border border-gray-700/50">Gemini API</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="reveal h-full perspective-1000 tilt-card" data-delay="300">
+                        <div class="tilt-card-inner w-full h-full glass-card rounded-3xl border border-white/5 group overflow-hidden shimmer-sweep relative">
+                            <div class="absolute -inset-px rounded-3xl bg-gradient-to-b from-cyan-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                            <div class="p-6 md:p-8 flex flex-col h-full relative z-10">
+                                <div class="flex justify-between items-start mb-4 md:mb-6">
+                                    <div class="p-2 md:p-3 bg-gray-800/80 rounded-2xl border border-white/5 text-purple-400 shadow-inner group-hover:bg-purple-500/20 group-hover:text-purple-300 transition-colors">
+                                        <i data-lucide="code" class="w-5 h-5 md:w-6 md:h-6"></i>
+                                    </div>
+                                    <a href="https://wa.me/918887092926" target="_blank" class="p-2 rounded-full hover:bg-white/10 text-gray-300 hover:text-white transition-colors cursor-pointer z-20">
+                                        <i data-lucide="arrow-right" class="-rotate-45 w-[18px] h-[18px] md:w-5 md:h-5"></i>
+                                    </a>
+                                </div>
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 group-hover:text-cyan-400 transition-colors leading-tight">Universal Downloader</h3>
+                                <p class="text-slate-300 text-xs sm:text-sm mb-6 md:mb-8 flex-grow font-light leading-relaxed">High-speed Telegram bot capable of downloading media seamlessly from Instagram, YouTube, and TikTok without watermarks.</p>
+                                <div class="flex flex-wrap gap-2 mt-auto pt-4 md:pt-6 border-t border-white/5">
+                                    <span class="text-[9px] md:text-[10px] font-semibold tracking-wider uppercase px-2 py-1 md:px-3 md:py-1.5 bg-gray-900/50 text-gray-300 rounded-lg border border-gray-700/50">Node.js</span>
+                                    <span class="text-[9px] md:text-[10px] font-semibold tracking-wider uppercase px-2 py-1 md:px-3 md:py-1.5 bg-gray-900/50 text-gray-300 rounded-lg border border-gray-700/50">FFmpeg</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES SECTION -->
+        <section id="services" class="py-16 md:py-24 relative">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+                <div class="reveal text-center mb-12 md:mb-20">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6">My <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Services</span></h2>
+                    <div class="w-20 md:w-24 h-1 bg-gradient-to-r from-blue-400 to-emerald-400 mx-auto rounded-full shadow-[0_0_10px_#34d399]"></div>
+                </div>
+                
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                    <div class="reveal group glass-card p-6 md:p-8 rounded-2xl md:rounded-3xl border border-white/5 hover:border-emerald-500/30 transition-all duration-500 hover:-translate-y-2 relative overflow-hidden" data-delay="100">
+                        <div class="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gray-900/80 text-cyan-400 mb-4 md:mb-6 border border-white/5 group-hover:scale-110 transition-transform duration-500 group-hover:shadow-[0_0_20px_rgba(52,211,153,0.3)]">
+                            <i data-lucide="bot" class="w-6 h-6 md:w-8 md:h-8"></i>
+                        </div>
+                        <h3 class="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 group-hover:text-emerald-400 transition-colors">AI Bot Development</h3>
+                        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-light">Custom AI-driven Telegram/Discord bots tailored for automation and support.</p>
+                    </div>
+                    <div class="reveal group glass-card p-6 md:p-8 rounded-2xl md:rounded-3xl border border-white/5 hover:border-emerald-500/30 transition-all duration-500 hover:-translate-y-2 relative overflow-hidden" data-delay="200">
+                        <div class="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gray-900/80 text-cyan-400 mb-4 md:mb-6 border border-white/5 group-hover:scale-110 transition-transform duration-500 group-hover:shadow-[0_0_20px_rgba(52,211,153,0.3)]">
+                            <i data-lucide="trending-up" class="w-6 h-6 md:w-8 md:h-8"></i>
+                        </div>
+                        <h3 class="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 group-hover:text-emerald-400 transition-colors">Social Strategy</h3>
+                        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-light">Algorithmic growth strategies for Instagram theme pages to maximize potential.</p>
+                    </div>
+                    <div class="reveal group glass-card p-6 md:p-8 rounded-2xl md:rounded-3xl border border-white/5 hover:border-emerald-500/30 transition-all duration-500 hover:-translate-y-2 relative overflow-hidden" data-delay="300">
+                        <div class="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gray-900/80 text-cyan-400 mb-4 md:mb-6 border border-white/5 group-hover:scale-110 transition-transform duration-500 group-hover:shadow-[0_0_20px_rgba(52,211,153,0.3)]">
+                            <i data-lucide="monitor-smartphone" class="w-6 h-6 md:w-8 md:h-8"></i>
+                        </div>
+                        <h3 class="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 group-hover:text-emerald-400 transition-colors">Web Development</h3>
+                        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-light">Premium, glassmorphic modern websites engineered for raw performance.</p>
+                    </div>
+                    <div class="reveal group glass-card p-6 md:p-8 rounded-2xl md:rounded-3xl border border-white/5 hover:border-emerald-500/30 transition-all duration-500 hover:-translate-y-2 relative overflow-hidden" data-delay="400">
+                        <div class="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-gray-900/80 text-cyan-400 mb-4 md:mb-6 border border-white/5 group-hover:scale-110 transition-transform duration-500 group-hover:shadow-[0_0_20px_rgba(52,211,153,0.3)]">
+                            <i data-lucide="code" class="w-6 h-6 md:w-8 md:h-8"></i>
+                        </div>
+                        <h3 class="text-lg md:text-xl font-bold text-white mb-2 md:mb-3 group-hover:text-emerald-400 transition-colors">Digital Marketing</h3>
+                        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed font-light">End-to-end Meta Ads setup, local business growth tactics, and sales funnels.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CERTIFICATIONS SECTION -->
+        <section id="certifications" class="py-16 md:py-24 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+                <div class="reveal text-center mb-12 md:mb-20">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 md:mb-6">Global <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Credentials</span></h2>
+                    <div class="w-20 md:w-24 h-1 bg-gradient-to-r from-yellow-400 to-orange-500 mx-auto rounded-full shadow-[0_0_10px_#fbbf24]"></div>
+                </div>
+
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    
+                    <div class="reveal relative h-[20rem] md:h-72 perspective-1000 group" data-delay="100">
+                        <div class="w-full h-full relative preserve-3d transition-transform duration-700 group-hover:rotate-y-180 cursor-pointer">
+                            <div class="absolute w-full h-full glass-card rounded-2xl md:rounded-3xl p-6 md:p-8 border border-white/10 backface-hidden flex flex-col justify-center items-center text-center">
+                                <div class="p-4 bg-gray-800/80 rounded-full border border-white/5 mb-4 shadow-lg group-hover:animate-pulse text-blue-400"><i data-lucide="award" class="w-8 h-8"></i></div>
+                                <h3 class="text-base md:text-lg font-bold text-white leading-tight mb-2">Azure & AI Fundamentals</h3>
+                                <p class="text-yellow-500 text-xs md:text-sm font-semibold tracking-wide uppercase">Microsoft</p>
+                            </div>
+                            <div class="absolute w-full h-full glass-card rounded-2xl md:rounded-3xl p-6 md:p-8 border border-yellow-500/30 backface-hidden rotate-y-180 flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+                                <div class="flex items-start gap-3 text-gray-300 text-xs sm:text-sm mb-4 font-light">
+                                    <i data-lucide="check-circle" class="text-emerald-400 shrink-0 w-4 h-4 mt-0.5"></i>
+                                    <p>Completed 7 Advanced Modules including Cloud Computing, Core Architecture, and AI Models.</p>
+                                </div>
+                                <div class="mt-auto pt-4 border-t border-white/10 text-[10px] md:text-xs text-gray-500 font-semibold tracking-wider uppercase">Issued: May 2024</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal relative h-[20rem] md:h-72 perspective-1000 group" data-delay="200">
+                        <div class="w-full h-full relative preserve-3d transition-transform duration-700 group-hover:rotate-y-180 cursor-pointer">
+                            <div class="absolute w-full h-full glass-card rounded-2xl md:rounded-3xl p-6 md:p-8 border border-white/10 backface-hidden flex flex-col justify-center items-center text-center">
+                                <div class="p-4 bg-gray-800/80 rounded-full border border-white/5 mb-4 shadow-lg group-hover:animate-pulse text-cyan-400"><i data-lucide="trending-up" class="w-8 h-8"></i></div>
+                                <h3 class="text-base md:text-lg font-bold text-white leading-tight mb-2">Digital Marketing</h3>
+                                <p class="text-yellow-500 text-xs md:text-sm font-semibold tracking-wide uppercase">IIDE</p>
+                            </div>
+                            <div class="absolute w-full h-full glass-card rounded-2xl md:rounded-3xl p-6 md:p-8 border border-yellow-500/30 backface-hidden rotate-y-180 flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+                                <div class="flex items-start gap-3 text-gray-300 text-xs sm:text-sm mb-4 font-light">
+                                    <i data-lucide="check-circle" class="text-emerald-400 shrink-0 w-4 h-4 mt-0.5"></i>
+                                    <p>Mastercourse Completion with a focus on modern growth algorithms and social strategy.</p>
+                                </div>
+                                <div class="mt-auto pt-4 border-t border-white/10 text-[10px] md:text-xs text-gray-500 font-semibold tracking-wider uppercase">Issued: Mar 2025</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reveal relative h-[20rem] md:h-72 perspective-1000 group" data-delay="300">
+                        <div class="w-full h-full relative preserve-3d transition-transform duration-700 group-hover:rotate-y-180 cursor-pointer">
+                            <div class="absolute w-full h-full glass-card rounded-2xl md:rounded-3xl p-6 md:p-8 border border-white/10 backface-hidden flex flex-col justify-center items-center text-center">
+                                <div class="p-4 bg-gray-800/80 rounded-full border border-white/5 mb-4 shadow-lg group-hover:animate-pulse text-purple-400"><i data-lucide="code" class="w-8 h-8"></i></div>
+                                <h3 class="text-base md:text-lg font-bold text-white leading-tight mb-2">Hackathons & Workshops</h3>
+                                <p class="text-yellow-500 text-xs md:text-sm font-semibold tracking-wide uppercase">IIT Kanpur</p>
+                            </div>
+                            <div class="absolute w-full h-full glass-card rounded-2xl md:rounded-3xl p-6 md:p-8 border border-yellow-500/30 backface-hidden rotate-y-180 flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+                                <div class="flex items-start gap-3 text-gray-300 text-xs sm:text-sm mb-4 font-light">
+                                    <i data-lucide="check-circle" class="text-emerald-400 shrink-0 w-4 h-4 mt-0.5"></i>
+                                    <p>Actively participated in rigorous hackathons and specialized AI workshops.</p>
+                                </div>
+                                <div class="mt-auto pt-4 border-t border-white/10 text-[10px] md:text-xs text-gray-500 font-semibold tracking-wider uppercase">Issued: Recent</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS SECTION -->
+        <section class="py-16 md:py-24 relative overflow-hidden">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+                <div class="relative min-h-[350px] sm:min-h-[250px] md:min-h-[240px] flex items-center justify-center glass-card rounded-[2rem] md:rounded-[2.5rem] p-6 sm:p-8 md:p-12 border border-white/5">
+                    
+                    <div id="testimonial-content" class="text-center transition-opacity duration-500">
+                        <div class="mb-4 md:mb-6 relative w-full">
+                            <span class="text-4xl md:text-6xl text-cyan-500/20 absolute -top-2 -left-2 md:-top-4 md:-left-6 font-serif">"</span>
+                            <p id="test-text" class="text-base sm:text-lg md:text-2xl text-slate-100 font-medium italic relative z-10 text-shadow-sm leading-relaxed px-4 md:px-0">
+                                Anant completely transformed our digital presence. His AI-driven ad strategies brought us leads we didn't know existed.
+                            </p>
+                        </div>
+                        <div>
+                            <h4 id="test-name" class="text-cyan-400 font-bold tracking-wide uppercase text-xs md:text-sm">Rajesh S.</h4>
+                            <p id="test-role" class="text-gray-500 text-[10px] md:text-sm">Local Business Owner</p>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Indicators -->
+                <div class="flex justify-center mt-6 md:mt-8 gap-2 md:gap-3" id="test-indicators">
+                    <button class="test-btn h-1.5 w-6 md:w-8 bg-cyan-400 shadow-[0_0_8px_#22d3ee] rounded-full transition-all duration-300" data-index="0"></button>
+                    <button class="test-btn h-1.5 w-2 bg-gray-700 hover:bg-gray-500 rounded-full transition-all duration-300" data-index="1"></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="py-16 md:py-24 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+                <div class="reveal glass-card rounded-[2rem] md:rounded-[3rem] p-6 sm:p-8 md:p-16 border border-white/10 shadow-2xl relative overflow-hidden">
+                    <div class="grid lg:grid-cols-2 gap-10 md:gap-12 lg:gap-20">
+                        
+                        <div class="relative z-10">
+                            <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-4 md:mb-6 tracking-tight">Let's build something <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 neon-text-glow">Extraordinary.</span></h2>
+                            <p class="text-slate-200 mb-8 md:mb-10 text-sm sm:text-base md:text-lg font-light leading-relaxed">
+                                Need a custom AI bot, a complete digital marketing overhaul, or a stunning modern website? I'm ready to bring your vision to life.
+                            </p>
+                            <div class="space-y-4 md:space-y-6">
+                                <a href="mailto:anant013opp@gmail.com" class="inline-flex items-center text-gray-300 hover:text-cyan-400 transition-colors group text-sm sm:text-base md:text-lg break-all">
+                                    <div class="min-w-10 w-10 h-10 md:min-w-12 md:w-12 md:h-12 rounded-full glass-card flex items-center justify-center mr-3 sm:mr-4 group-hover:bg-cyan-500/20 transition-all border border-white/5 shadow-lg shrink-0">
+                                        <i data-lucide="mail" class="w-[18px] h-[18px] md:w-5 md:h-5"></i>
+                                    </div>
+                                    anant013opp@gmail.com
+                                </a>
+                                <div class="flex flex-wrap gap-3 md:gap-4 pt-4 md:pt-6">
+                                    <a href="https://instagram.com/888anant" target="_blank" class="magnetic-btn w-12 h-12 md:w-14 md:h-14 rounded-full glass-card flex items-center justify-center text-gray-400 hover:text-white hover:bg-gradient-to-tr hover:from-cyan-500 hover:to-purple-600 transition-all duration-300 border border-white/5 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                                        <i data-lucide="instagram" class="w-5 h-5"></i>
+                                    </a>
+                                    <a href="https://wa.me/918887092926" target="_blank" class="magnetic-btn w-12 h-12 md:w-14 md:h-14 rounded-full glass-card flex items-center justify-center text-gray-400 hover:text-white hover:bg-gradient-to-tr hover:from-cyan-500 hover:to-purple-600 transition-all duration-300 border border-white/5 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+                                        <i data-lucide="message-circle" class="w-5 h-5"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 w-full">
+                            <form id="contactForm" class="space-y-4 md:space-y-6">
+                                <div class="input-wrapper w-full">
+                                    <input required type="text" id="name" class="input-field text-sm md:text-base w-full" placeholder=" " />
+                                    <label for="name" class="input-label text-xs md:text-sm">Your Name</label>
+                                </div>
+                                <div class="input-wrapper w-full">
+                                    <input required type="email" id="email" class="input-field text-sm md:text-base w-full" placeholder=" " />
+                                    <label for="email" class="input-label text-xs md:text-sm">Email Address</label>
+                                </div>
+                                <div class="input-wrapper w-full">
+                                    <textarea required id="message" rows="4" class="input-field resize-none text-sm md:text-base w-full" placeholder=" "></textarea>
+                                    <label for="message" class="input-label text-xs md:text-sm">Project Details</label>
+                                </div>
+                                <button type="submit" id="submitBtn" class="magnetic-btn w-full py-3 md:py-4 rounded-xl font-bold text-white transition-all duration-500 flex items-center justify-center gap-2 overflow-hidden relative text-sm md:text-base bg-gradient-to-r from-cyan-500 to-purple-600 hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] border border-transparent">
+                                    <span id="btn-text" class="flex items-center">Initialize Project <i data-lucide="send" class="w-4 h-4 ml-2"></i></span>
+                                </button>
+                            </form>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="py-6 md:py-8 border-t border-white/5 text-center bg-black relative z-20">
+        <p class="text-gray-500 text-xs md:text-sm font-light px-4">© <span id="year"></span> Anant Upadhyay. Crafted with passion, math & AI.</p>
+    </footer>
+
+    <!-- MAIN JAVASCRIPT -->
+    <script>
+        // 1. Initialize Icons
+        lucide.createIcons();
+        document.getElementById('year').innerText = new Date().getFullYear();
+
+        // 2. Loader Sequence
+        window.addEventListener('load', () => {
+            let progress = 0;
+            const textEl = document.getElementById('loader-text');
+            const barEl = document.getElementById('loader-bar');
+            const loader = document.getElementById('loader');
+            
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 15) + 5;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loader.style.opacity = '0';
+                        loader.style.visibility = 'hidden';
+                    }, 500);
+                }
+                textEl.innerText = `${progress}%`;
+                barEl.style.width = `${progress}%`;
+            }, 100);
+        });
+
+        // 3. Navbar & Mobile Menu
+        const navbar = document.getElementById('navbar');
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        let isMenuOpen = false;
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('glass-card', 'border-b', 'border-white/5');
+                navbar.classList.remove('bg-transparent', 'py-5', 'md:py-6');
+                navbar.classList.add('py-3', 'md:py-4');
+            } else {
+                navbar.classList.remove('glass-card', 'border-b', 'border-white/5', 'py-3', 'md:py-4');
+                navbar.classList.add('bg-transparent', 'py-5', 'md:py-6');
+            }
+        });
+
+        mobileBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('hidden', 'scale-y-0', 'opacity-0');
+                menuIcon.setAttribute('data-lucide', 'x');
+            } else {
+                mobileMenu.classList.add('scale-y-0', 'opacity-0');
+                setTimeout(() => mobileMenu.classList.add('hidden'), 300);
+                menuIcon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        });
+
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                isMenuOpen = false;
+                mobileMenu.classList.add('scale-y-0', 'opacity-0');
+                setTimeout(() => mobileMenu.classList.add('hidden'), 300);
+                menuIcon.setAttribute('data-lucide', 'menu');
+                lucide.createIcons();
+            });
+        });
+
+        // 4. Typing Effect
+        const typeText = "Building AI-Powered Digital Experiences.";
+        const typeEl = document.getElementById('typewriter');
+        let typeIdx = 0;
+        const typeInterval = setInterval(() => {
+            if (typeIdx < typeText.length) {
+                typeEl.innerText += typeText.charAt(typeIdx);
+                typeIdx++;
+            } else {
+                clearInterval(typeInterval);
+            }
+        }, 60);
+
+        // 5. Scroll Reveals (Intersection Observer)
+        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = entry.target.getAttribute('data-delay') || 0;
+                    setTimeout(() => {
+                        entry.target.classList.add('active');
+                        // Animate skill bars if inside
+                        const skillBar = entry.target.querySelector('.skill-fill');
+                        if (skillBar) skillBar.style.width = skillBar.getAttribute('data-width');
+                    }, delay);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // 6. Magnetic Buttons & 3D Tilt Cards
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        
+        if (!isTouchDevice) {
+            // Magnetic
+            document.querySelectorAll('.magnetic-btn').forEach(btn => {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = (e.clientX - rect.left - rect.width / 2) * 0.2;
+                    const y = (e.clientY - rect.top - rect.height / 2) * 0.2;
+                    btn.style.transform = `translate(${x}px, ${y}px) scale(0.98)`;
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = `translate(0px, 0px) scale(1)`;
+                });
+            });
+
+            // Tilt Cards
+            document.querySelectorAll('.tilt-card').forEach(card => {
+                const inner = card.querySelector('.tilt-card-inner');
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const xPct = (x / rect.width - 0.5) * 20; // max 10deg
+                    const yPct = (y / rect.height - 0.5) * -20;
+                    inner.style.setProperty('--rx', `${yPct}deg`);
+                    inner.style.setProperty('--ry', `${xPct}deg`);
+                });
+                card.addEventListener('mouseleave', () => {
+                    inner.style.setProperty('--rx', `0deg`);
+                    inner.style.setProperty('--ry', `0deg`);
+                });
+            });
+        }
+
+        // 7. Testimonials Carousel
+        const testimonials = [
+            { text: "Anant completely transformed our digital presence. His AI-driven ad strategies brought us leads we didn't know existed.", name: "Rajesh S.", role: "Local Business Owner" },
+            { text: "The custom video downloader bot Anant built saves me hours of workflow every single week. Absolutely brilliant execution.", name: "Priya M.", role: "Content Creator" }
+        ];
+        let tIndex = 0;
+        const tContent = document.getElementById('testimonial-content');
+        const tBtns = document.querySelectorAll('.test-btn');
+        
+        const updateTestimonial = (index) => {
+            tContent.style.opacity = 0;
+            setTimeout(() => {
+                document.getElementById('test-text').innerText = testimonials[index].text;
+                document.getElementById('test-name').innerText = testimonials[index].name;
+                document.getElementById('test-role').innerText = testimonials[index].role;
+                
+                tBtns.forEach((btn, i) => {
+                    if(i === index) {
+                        btn.className = "test-btn h-1.5 w-6 md:w-8 bg-cyan-400 shadow-[0_0_8px_#22d3ee] rounded-full transition-all duration-300";
+                    } else {
+                        btn.className = "test-btn h-1.5 w-2 bg-gray-700 hover:bg-gray-500 rounded-full transition-all duration-300";
+                    }
+                });
+                tContent.style.opacity = 1;
+            }, 300);
+        };
+
+        setInterval(() => {
+            tIndex = (tIndex + 1) % testimonials.length;
+            updateTestimonial(tIndex);
+        }, 5000);
+
+        tBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                tIndex = parseInt(e.target.getAttribute('data-index'));
+                updateTestimonial(tIndex);
+            });
+        });
+
+        // 8. Contact Form via WhatsApp Redirect
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btn-text');
+            
+            // Submitting state
+            btn.classList.remove('bg-gradient-to-r', 'from-cyan-500', 'to-purple-600', 'hover:shadow-[0_0_30px_rgba(34,211,238,0.5)]');
+            btn.classList.add('bg-gray-800', 'border-gray-600', 'cursor-wait');
+            btnText.innerHTML = `<div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div> Transmitting...`;
+            
+            setTimeout(() => {
+                // Success state
+                btn.classList.remove('bg-gray-800', 'border-gray-600', 'cursor-wait');
+                btn.classList.add('bg-emerald-500', 'border-emerald-400', 'shadow-[0_0_20px_rgba(16,185,129,0.4)]');
+                btnText.innerHTML = `Message Secured <i data-lucide="check-circle" class="w-4 h-4 ml-2"></i>`;
+                lucide.createIcons();
+                
+                // Open WhatsApp
+                const name = document.getElementById('name').value;
+                const msg = document.getElementById('message').value;
+                const text = encodeURIComponent(`Hi Anant! I'm ${name}.\n\nProject Details: ${msg}`);
+                window.open(`https://wa.me/918887092926?text=${text}`, '_blank');
+                
+                // Reset
+                e.target.reset();
+                setTimeout(() => {
+                    btn.className = "magnetic-btn w-full py-3 md:py-4 rounded-xl font-bold text-white transition-all duration-500 flex items-center justify-center gap-2 overflow-hidden relative text-sm md:text-base bg-gradient-to-r from-cyan-500 to-purple-600 hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] border border-transparent";
+                    btnText.innerHTML = `Initialize Project <i data-lucide="send" class="w-4 h-4 ml-2"></i>`;
+                    lucide.createIcons();
+                }, 3000);
+            }, 1000);
+        });
+
+        // 9. Neural Network Canvas Background
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let nodes = [], signals = [];
+        let mouse = { x: -1000, y: -1000 };
+        const colors = [
+            { r: 6, g: 182, b: 212 },   // cyan
+            { r: 59, g: 130, b: 246 },  // blue
+            { r: 139, g: 92, b: 246 }   // purple
+        ];
+
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initNodes();
+        };
+
+        const initNodes = () => {
+            const density = (window.innerWidth * window.innerHeight) / 15000;
+            const count = Math.max(50, Math.min(120, Math.floor(density)));
+            nodes = Array.from({ length: count }).map(() => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 1.5 + 0.5,
+                baseColor: colors[Math.floor(Math.random() * colors.length)],
+                burst: 0
+            }));
+        };
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('mouseout', () => { mouse.x = -1000; mouse.y = -1000; });
+        resizeCanvas();
+
+        setInterval(() => {
+            if (nodes.length === 0) return;
+            const startNode = nodes[Math.floor(Math.random() * nodes.length)];
+            startNode.burst = 1;
+            nodes.forEach(target => {
+                if (startNode === target) return;
+                const dist = Math.hypot(target.x - startNode.x, target.y - startNode.y);
+                if (dist < 150) {
+                    signals.push({
+                        start: startNode, target: target, progress: 0,
+                        speed: 0.015 + Math.random() * 0.015,
+                        color: { r: 6, g: 182, b: 212 }
+                    });
+                }
+            });
+        }, 2500);
+
+        const renderCanvas = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const dist = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
+                    if (dist < 150) {
+                        const baseAlpha = (1 - (dist / 150)) * 0.15;
+                        const pulse = Math.max(nodes[i].burst, nodes[j].burst) * 0.6;
+                        const totalAlpha = Math.min(1, baseAlpha + pulse);
+                        ctx.beginPath();
+                        ctx.moveTo(nodes[i].x, nodes[i].y);
+                        ctx.lineTo(nodes[j].x, nodes[j].y);
+                        ctx.strokeStyle = `rgba(6, 182, 212, ${totalAlpha})`;
+                        ctx.lineWidth = 0.5 + pulse * 1.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            nodes.forEach(node => {
+                node.x += node.vx; node.y += node.vy;
+                if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+                if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+
+                const distToMouse = Math.hypot(mouse.x - node.x, mouse.y - node.y);
+                let mousePulse = 0;
+                if (distToMouse < 150) {
+                    node.x += (mouse.x - node.x) * 0.015;
+                    node.y += (mouse.y - node.y) * 0.015;
+                    mousePulse = 1 - (distToMouse / 150);
+                }
+
+                if (node.burst > 0) node.burst -= 0.015;
+                if (node.burst < 0) node.burst = 0;
+
+                const alpha = Math.min(1, 0.3 + mousePulse + node.burst);
+                const radius = node.radius + (mousePulse * 2) + (node.burst * 2);
+
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${node.baseColor.r}, ${node.baseColor.g}, ${node.baseColor.b}, ${alpha})`;
+                
+                if (mousePulse > 0 || node.burst > 0) {
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = `rgba(${node.baseColor.r}, ${node.baseColor.g}, ${node.baseColor.b}, ${alpha})`;
+                }
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+
+            for (let i = signals.length - 1; i >= 0; i--) {
+                const sig = signals[i];
+                sig.progress += sig.speed;
+                if (sig.progress >= 1) {
+                    sig.target.burst = Math.max(sig.target.burst, 0.8);
+                    signals.splice(i, 1);
+                    continue;
+                }
+                const currX = sig.start.x + (sig.target.x - sig.start.x) * sig.progress;
+                const currY = sig.start.y + (sig.target.y - sig.start.y) * sig.progress;
+
+                ctx.beginPath();
+                ctx.arc(currX, currY, 2.5, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${sig.color.r}, ${sig.color.g}, ${sig.color.b}, 1)`;
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = `rgba(${sig.color.r}, ${sig.color.g}, ${sig.color.b}, 1)`;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+
+            requestAnimationFrame(renderCanvas);
+        };
+        renderCanvas();
+    </script>
+</body>
+</html>
